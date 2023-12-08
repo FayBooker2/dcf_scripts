@@ -28,11 +28,12 @@ index=Gen3Index(auth)
 
 # Indexing File
 MANIFEST = (
-    "/Users/faybooker/Downloads/CTDC/File_Transfer_Manifest_for_ICDC_Test_Files_Destined_for_CTDC_v1_indexd.tsv"
+    "/Users/faybooker/Downloads/phs002790/Nov2023/MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
 )
 # This is created if we need to write out a manifest with generatied GUIDs
 OUTMANIFEST = (
-       "/Users/faybooker/Downloads/CTDC/DCF_File_Transfer_Manifest_for_ICDC_Test_Files_Destined_for_CTDC_v1_indexd.tsv"
+# Note that the outmanifest has a DCF_ prefix in the file name -- typical DCF_manifestname
+    "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
 )
 
 if not index.is_healthy():
@@ -95,4 +96,4 @@ for ind in study.index:
 
 if len(newguids) > 0:
     study['guid']=newguids
-    study.to_csv(OUTMANIFEST, sep="\t", )
+    study.to_csv(OUTMANIFEST, index=False, sep="\t")

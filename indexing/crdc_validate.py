@@ -19,10 +19,10 @@ from gen3.tools import indexing
 #logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 IN_MANIFEST = (
-    "/Users/faybooker/Downloads/phs002430/Nov2023/UCSF_CCDI_Submission_Template_v1.1.1_FINAL_v1.5.2_V3_CatchERR20231103_v1.7.0_Updater20231103_CatchERR20231103_CatchERR20231103_no_imaging_onlyPI_CDS20231115_index20231115.tsv"
+    "/Users/faybooker/Downloads/phs002790/Nov2023/MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
 )
 OUT_MANIFEST= (
-    "/Users/faybooker/Downloads/phs002430/Nov2023/DCF_generatedmanifest_file2_20231122.tsv"
+    "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_generatedmanifest_20231208.tsv"
 )
 
 api='https://nci-crdc.datacommons.io'
@@ -52,8 +52,6 @@ badrecs=0
 
 for ind in study.index:
     if (ind%10 == 0):
-        print("Processing record: ", ind)
-    if (ind >= 2680):
         print("Processing record: ", ind)
     myguid=study['guid'][ind]
     mymd5=study['md5'][ind]
