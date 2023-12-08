@@ -27,7 +27,7 @@ logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 # manifest with guids
 MANIFEST = (
 #    "/Users/faybooker/Downloads/phs002790/June2023/cds_MetaMerge20230525_NewBucket20230525_index20230526.tsv"
-     "/Users/faybooker/Downloads/CDS_Buckets/phs002432_newBucket20230719.tsv"
+    "/Users/faybooker/Downloads/phs002790/Nov2023/MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
     )
 
 if not index.is_healthy():

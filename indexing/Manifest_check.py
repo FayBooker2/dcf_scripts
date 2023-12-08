@@ -11,7 +11,7 @@ logging.basicConfig(filename="output.log", level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 MANIFEST = (
-    "/Users/faybooker/Downloads/CTDC/File_Transfer_Manifest_for_ICDC_Test_Files_Destined_for_CTDC_v1_indexd.tsv"
+    "/Users/faybooker/Downloads/phs002790/Nov2023/MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
     )
 
 
