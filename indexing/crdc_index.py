@@ -28,12 +28,13 @@ index=Gen3Index(auth)
 
 # Indexing File
 MANIFEST = (
-    "/Users/faybooker/Downloads/phs002790/Nov2023/MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+    #"/Users/faybooker/Downloads/HTAN/Dec2023/phs002371_CDS_metadata_v21.9.1.seq_V5_2NewFiles_v2_index20231115_updated20231204.tsv"
+    "/Users/faybooker/Downloads/phs002517/Dec2023/phs002517_CHOP_CCDI_Submission_v1.7.1_Updater20231128_CatchERR20231128_ONLY_IMAGING_CDS20231129_index20231129.tsv"
 )
 # This is created if we need to write out a manifest with generatied GUIDs
 OUTMANIFEST = (
 # Note that the outmanifest has a DCF_ prefix in the file name -- typical DCF_manifestname
-    "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+    "/Users/faybooker/Downloads/phs002517/Dec2023/DCF_phs002517_CHOP_CCDI_Submission_v1.7.1_Updater20231128_CatchERR20231128_ONLY_IMAGING_CDS20231129_index20231129.tsv"
 )
 
 if not index.is_healthy():
@@ -52,6 +53,8 @@ if 'guid' not in study.columns:
 
 study=pd.read_csv(MANIFEST,sep='\t')
 for ind in study.index:
+    if (ind%10 == 0):
+        print("Processing record: ", ind)
     mymd5=study['md5'][ind]
     mysize=(study['size'][ind]).item()
     myacl=study['acl'][ind].strip('"').strip('[]').strip("'")
