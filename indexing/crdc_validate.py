@@ -19,10 +19,10 @@ from gen3.tools import indexing
 #logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 IN_MANIFEST = (
-    "/Users/faybooker/Downloads/phs002790/Nov2023/MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+    "/Users/faybooker/Downloads/GDIT/Jan2023/GW_GDIT_phs003155_full-metadata.tsv"
 )
 OUT_MANIFEST= (
-    "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_generatedmanifest_20231208.tsv"
+   "/Users/faybooker/Downloads/GDIT/Jan2023/DCF_GWGDIT_phs003155_full-metadata_generatedmanifest_20230108.tsv"
 )
 
 api='https://nci-crdc.datacommons.io'
@@ -54,6 +54,8 @@ for ind in study.index:
     if (ind%10 == 0):
         print("Processing record: ", ind)
     myguid=study['guid'][ind]
+    if myguid=="":
+        break
     mymd5=study['md5'][ind]
     mysize=(study['size'][ind]).item()
     myacl=[study['acl'][ind].strip('"').strip('[]').strip("'")]
@@ -61,7 +63,7 @@ for ind in study.index:
     myfilename=[study['file_name'][ind].strip('"').strip('[]').strip("'")]
     #myacl=[myacl]
     #myacl=myacl.strip(']')
-    myurl=[study['urls'][ind].strip('"')]
+    myurl=[study['url'][ind].strip('"')]
     v=index.get(guid=myguid)
     bad=0
     # shoud loop this but...
@@ -91,7 +93,8 @@ for ind in study.index:
 print("Total Recods =", study.index)
 print("Total Errors =",toterrs)
 print("Bad Records = ",badrecs)
-
+# Calculate size of indexed records
+print("FileSize (GB) =", sum(thissize)*1e-9)
 # produce output manifest
 dict={'guid':thisguid, 'md5': thismd5, 'size': thissize, 'acl': thisacl, 'urls':thisurl, 'authz': thisauthz, 'filename': thisfilename}
 df=pd.DataFrame(dict)

@@ -11,7 +11,7 @@ logging.basicConfig(filename="output.log", level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 MANIFEST = (
-    "/Users/faybooker/Downloads/phs002790/Nov2023/MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+    "/Users/faybooker/Downloads/phs002517/Dec2023/phs002517_CHOP_CCDI_Submission_v1.7.1_Updater20231128_CatchERR20231128_ONLY_IMAGING_CDS20231129_index20231129.tsv"
     )
 
 
