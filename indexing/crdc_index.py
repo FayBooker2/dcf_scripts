@@ -9,18 +9,20 @@ import sys
 import itertools as it
 import asyncio
 import logging
+from datetime import datetime
 
 import gen3
 from gen3.auth import Gen3Auth
 from gen3.index import Gen3Index
 from gen3.tools import indexing
 
+
 # Gen3 Creds
 api='https://nci-crdc.datacommons.io'
-cred = '/Users/faybooker/Downloads/ncicrdc.json'
+cred = '/Users/jdorsheimer/.cred/credentials-cds.json'
 
 auth = Gen3Auth(api, refresh_file=cred)
-index=Gen3Index(auth)
+index = Gen3Index(auth)
 
 # May want to re-institute logging at some point
 #logging.basicConfig(filename="/Users/faybooker/Downloads/DR3.2/PDC000357-PDC000358-PDC000359-PDC000360-PDC000361-PDC000362-Files-080202023.log", level=logging.DEBUG)
@@ -28,19 +30,45 @@ index=Gen3Index(auth)
 
 # Indexing File
 MANIFEST = (
-    "/Users/faybooker/Downloads/phs002790/Nov2023/MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+    "/Users/jdorsheimer/Projects/DCF/open/DCF_PDC000356-PDC000363-PDC000477-PDC000488-PDC000504-Files-01162024.csv"
 )
-# This is created if we need to write out a manifest with generatied GUIDs
-OUTMANIFEST = (
-# Note that the outmanifest has a DCF_ prefix in the file name -- typical DCF_manifestname
-    "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+# This is created if we need to write out a manifest with generatied GUIDs, automatically:
+# Splits MANIFEST to extract the directory path and filename.
+# Checks if the filename starts with "DCF_" and prepends it if not.
+# Removes the existing file extension and appends the new suffix "_indexed_YYYMMDD.tsv".
+# Joins everything back together to form the OUTMANIFEST path.
+OUTMANIFEST = "/".join(MANIFEST.rsplit('/', 1)[0:-1]) + "/" + ("DCF_" if not MANIFEST.split('/')[-1].startswith("DCF_") else "") + MANIFEST.split('/')[-1].rsplit('.', 1)[0] + "_indexed_" + datetime.now().strftime("%Y%m%d") + ".tsv"
+# OUTMANIFEST = (
+# # Note that the outmanifest has a DCF_ prefix in the file name -- typical DCF_manifestname
+#     "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+# )
+
+PROCESSING_LOG = f"{MANIFEST.rsplit('/', 1)[0]}/DCF_processing_{datetime.now().strftime('%Y%m%d')}.log"
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(PROCESSING_LOG),  # Log to file
+        logging.StreamHandler(sys.stdout)     # Log to console
+    ]
 )
 
 if not index.is_healthy():
-    print(f"uh oh! The indexing service is not healthy in the commons {api}")
-    exit()
+    logging.error(f"uh oh! The indexing service is not healthy in the commons {api}")
+    sys.exit(1)
 
-study=pd.read_csv(MANIFEST,sep='\t')
+# Function to determine the delimiter based on file extension
+def get_delimiter(file_name):
+    if file_name.endswith('.csv'):
+        return ','
+    elif file_name.endswith('.tsv'):
+        return '\t'
+    else:
+        # Default delimiter can be set here if file extension is neither .csv nor .tsv
+        return '\t'
+
+# Load the Dataframe
+study = pd.read_csv(MANIFEST, get_delimiter(MANIFEST))
 
 # correct for case at some point
 # See if there are guids in the manifest if not, will generate them
@@ -49,8 +77,6 @@ noguid=0
 if 'guid' not in study.columns:
     noguid=1
 
-
-study=pd.read_csv(MANIFEST,sep='\t')
 for ind in study.index:
     mymd5=study['md5'][ind]
     mysize=(study['size'][ind]).item()
@@ -66,7 +92,7 @@ for ind in study.index:
     myurls=study['url'][ind].strip("[").strip("]".strip(" "))
     myurls=myurls.split(",")
     if 'filename' in study.columns:
-        myfilename=(study['filename']['ind']).item()
+        myfilename=study['filename']['ind'].item()
     else:
         myfilename=myurls[0]
         # Get just the file_name
@@ -77,22 +103,21 @@ for ind in study.index:
             response = index.create_record(
             hashes={"md5": mymd5}, size=mysize, acl=myacl,urls=myurls,authz=myauthz,file_name=myfilename)
             myguid=response['did']
-            newguids.append(myguid)
+            logging.info(f"Processed record {ind}: {myguid}")
         except Exception as exc:
-            print(
-            "\nERROR ocurred when trying to create the record, you probably don't have access."
-            )
+            logging.error("Error occurred when trying to create the record", exc_info=True)
+
     else:
         myguid=study['guid'][ind]
         try:
             response = index.create_record(
             hashes={"md5": mymd5}, size=mysize, acl=myacl,did=myguid,urls=myurls,authz=myauthz,file_name=myfilename
             )
+            logging.info(f"Processed record {ind}: {myguid}")
+
         except Exception as exc:
-            print(
-            "\nERROR ocurred when trying to create the record, you probably don't have access."
-            )
-    print(f"Processed record {ind}: {myguid}")
+            logging.error("Error occurred when trying to create the record", exc_info=True)
+
 
 if len(newguids) > 0:
     study['guid']=newguids
