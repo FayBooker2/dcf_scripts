@@ -37,12 +37,13 @@ MANIFEST = (
 # Checks if the filename starts with "DCF_" and prepends it if not.
 # Removes the existing file extension and appends the new suffix "_indexed_YYYMMDD.tsv".
 # Joins everything back together to form the OUTMANIFEST path.
-OUTMANIFEST = "/".join(MANIFEST.rsplit('/', 1)[0:-1]) + "/" + ("DCF_" if not MANIFEST.split('/')[-1].startswith("DCF_") else "") + MANIFEST.split('/')[-1].rsplit('.', 1)[0] + "_indexed_" + datetime.now().strftime("%Y%m%d") + ".tsv"
-# OUTMANIFEST = (
-# # Note that the outmanifest has a DCF_ prefix in the file name -- typical DCF_manifestname
-#     "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
-# )
+# OUTMANIFEST = "/".join(MANIFEST.rsplit('/', 1)[0:-1]) + "/" + ("DCF_" if not MANIFEST.split('/')[-1].startswith("DCF_") else "") + MANIFEST.split('/')[-1].rsplit('.', 1)[0] + "_indexed_" + datetime.now().strftime("%Y%m%d") + ".tsv"
+OUTMANIFEST = (
+# Note that the outmanifest has a DCF_ prefix in the file name -- typical DCF_manifestname
+    "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+)
 
+# Check to ensure this does not overwrite existing logs
 PROCESSING_LOG = f"{MANIFEST.rsplit('/', 1)[0]}/DCF_processing_{datetime.now().strftime('%Y%m%d')}.log"
 logging.basicConfig(
     level=logging.INFO,

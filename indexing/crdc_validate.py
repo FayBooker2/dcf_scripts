@@ -32,7 +32,7 @@ OUT_MANIFEST = "/".join(IN_MANIFEST.rsplit('/', 1)[0:-1]) + "/" + ("DCF_" if not
 #     "/Users/jdorsheimer/Projects/DCF/phs002050/DCF_generatedmanifest_20240116.tsv"
 # )
 
-# Setup Logging
+# Check to ensure this does not overwrite existing logs
 PROCESSING_LOG = f"{IN_MANIFEST.rsplit('/', 1)[0]}/DCF_validation_{datetime.now().strftime('%Y%m%d')}.log"
 logging.basicConfig(
     level=logging.INFO,
@@ -88,6 +88,7 @@ for ind in study.index:
         mysize=(study['size'][ind]).item()
         myacl=[study['acl'][ind].strip('"').strip('[]').strip("'")]
         myauthz=[study['authz'][ind].strip('"').strip('[]').strip("'")]
+        # Add an if/else statement for file_name
         #myfilename=[study['file_name'][ind].strip('"').strip('[]').strip("'")]
         #myacl=[myacl]
         #myacl=myacl.strip(']')
