@@ -21,7 +21,7 @@ from gen3.tools import indexing
 #logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 IN_MANIFEST = (
-    "/Users/jdorsheimer/Projects/DCF/open/DCF_PDC000356-PDC000363-PDC000477-PDC000488-PDC000504-Files-01162024.csv"
+  "/Users/faybooker/Downloads/iodc/Mar2024/iodc_10021_crc_manifest.tsv"
 )
 # Splits MANIFEST to extract the directory path and filename.
 # Checks if the filename starts with "DCF_" and prepends it if not.
@@ -44,7 +44,7 @@ logging.basicConfig(
 )
 
 api='https://nci-crdc.datacommons.io'
-cred = '/Users/jdorsheimer/.cred/credentials-cds.json'
+cred = '/Users/faybooker/Downloads/ncicrdc.json'
 
 auth = Gen3Auth(api, refresh_file=cred)
 index=Gen3Index(auth)
@@ -66,7 +66,7 @@ def get_delimiter(file_name):
         return '\t'
 
 
-study=pd.read_csv(IN_MANIFEST, get_delimiter(IN_MANIFEST))
+study=pd.read_csv(IN_MANIFEST, sep=get_delimiter(IN_MANIFEST))
 
 # inialize variables
 thisguid=[]
@@ -120,6 +120,8 @@ for ind in study.index:
 logging.info(f"Total Records = {len(study.index)}")
 logging.info(f"Total Errors = {toterrs}")
 logging.info(f"Bad Records = {badrecs}")
+fsize=sum(thissize)*1e-9
+logging.info(f"FileSize (GB) = {fsize}")
 
 url_key = 'urls' if 'urls' in study.columns else 'url'
 

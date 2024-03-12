@@ -19,7 +19,7 @@ from gen3.tools import indexing
 
 # Gen3 Creds
 api='https://nci-crdc.datacommons.io'
-cred = '/Users/jdorsheimer/.cred/credentials-cds.json'
+cred = '/Users/faybooker/Downloads/ncicrdc.json'
 
 auth = Gen3Auth(api, refresh_file=cred)
 index = Gen3Index(auth)
@@ -30,8 +30,9 @@ index = Gen3Index(auth)
 
 # Indexing File
 MANIFEST = (
-    "/Users/jdorsheimer/Projects/DCF/open/DCF_PDC000356-PDC000363-PDC000477-PDC000488-PDC000504-Files-01162024.csv"
+  "/Users/faybooker/Downloads/iodc/Mar2024/iodc_10021_crc_manifest.tsv"
 )
+
 # This is created if we need to write out a manifest with generatied GUIDs, automatically:
 # Splits MANIFEST to extract the directory path and filename.
 # Checks if the filename starts with "DCF_" and prepends it if not.
@@ -40,7 +41,7 @@ MANIFEST = (
 # OUTMANIFEST = "/".join(MANIFEST.rsplit('/', 1)[0:-1]) + "/" + ("DCF_" if not MANIFEST.split('/')[-1].startswith("DCF_") else "") + MANIFEST.split('/')[-1].rsplit('.', 1)[0] + "_indexed_" + datetime.now().strftime("%Y%m%d") + ".tsv"
 OUTMANIFEST = (
 # Note that the outmanifest has a DCF_ prefix in the file name -- typical DCF_manifestname
-    "/Users/faybooker/Downloads/phs002790/Nov2023/DCF_MetaMerge20231024_NewBucket20231025_wGUID20231027_update_index20231030.tsv"
+  "/Users/faybooker/Downloads/iodc/Mar2024/DCF_iodc_10021_crc_manifest_wGuid.tsv"
 )
 
 # Check to ensure this does not overwrite existing logs
@@ -69,7 +70,7 @@ def get_delimiter(file_name):
         return '\t'
 
 # Load the Dataframe
-study = pd.read_csv(MANIFEST, get_delimiter(MANIFEST))
+study = pd.read_csv(MANIFEST, sep=get_delimiter(MANIFEST))
 
 # correct for case at some point
 # See if there are guids in the manifest if not, will generate them
@@ -90,10 +91,10 @@ for ind in study.index:
         ma="/programs/"+myacl
         myauthz=[ma]
     myacl=[myacl]
-    myurls=study['url'][ind].strip("[").strip("]".strip(" "))
+    myurls=study['urls'][ind].strip("[").strip("]".strip(" "))
     myurls=myurls.split(",")
-    if 'filename' in study.columns:
-        myfilename=study['filename']['ind'].item()
+    if 'file_name' in study.columns:
+        myfilename=study['file_name'][ind]
     else:
         myfilename=myurls[0]
         # Get just the file_name
