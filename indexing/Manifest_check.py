@@ -11,8 +11,9 @@ logging.basicConfig(filename="output.log", level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 MANIFEST = (
-    "/Users/faybooker/Downloads/phs002517/Dec2023/phs002517_CHOP_CCDI_Submission_v1.7.1_Updater20231128_CatchERR20231128_ONLY_IMAGING_CDS20231129_index20231129.tsv"
-    )
+  "/Users/faybooker/Downloads/phs002431/um_phs002431_ccdi_metadata_v28_v1.7.1_qc20240214_Updater_v1.7.2_2024-02-14_CatchERR20240214_Index20240214.tsv"
+)
+
 
 
 def main():
