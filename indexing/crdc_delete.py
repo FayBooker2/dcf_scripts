@@ -22,7 +22,10 @@ auth = Gen3Auth(endpoint, refresh_file=cred)
 index=Gen3Index(auth)
 
 #study=pd.read_csv("/Users/faybooker/Downloads/aml/AML_Ex_Vivo_Drug_Response_manifest_correctedGUIDs (1).tsv",sep='\t')
+
 study=pd.read_csv("/Users/faybooker/Downloads/iodc/Mar2024/iodc_10021_crc_manifest.tsv",sep='\t')
+
+
 guids=study["guid"]
 # initialize i
 i=1

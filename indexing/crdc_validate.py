@@ -41,7 +41,6 @@ logging.basicConfig(
         logging.FileHandler(PROCESSING_LOG),  # Log to file
         logging.StreamHandler(sys.stdout)     # Log to console
     ]
-)
 
 api='https://nci-crdc.datacommons.io'
 cred = '/Users/faybooker/Downloads/ncicrdc.json'
@@ -124,6 +123,7 @@ fsize=sum(thissize)*1e-9
 logging.info(f"FileSize (GB) = {fsize}")
 
 url_key = 'urls' if 'urls' in study.columns else 'url'
+
 
 # produce output manifest
 dict={'guid':thisguid, 'md5': thismd5, 'size': thissize, 'acl': thisacl, url_key:thisurl, 'authz': thisauthz} #, 'filename': thisfilename}

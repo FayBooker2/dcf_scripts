@@ -15,6 +15,7 @@ MANIFEST = (
 )
 
 
+
 def main():
 
     is_valid_manifest_format(

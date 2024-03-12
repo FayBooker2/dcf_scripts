@@ -80,6 +80,8 @@ if 'guid' not in study.columns:
     noguid=1
 
 for ind in study.index:
+    if (ind%10 == 0):
+        print("Processing record: ", ind)
     mymd5=study['md5'][ind]
     mysize=(study['size'][ind]).item()
     myacl=study['acl'][ind].strip('"').strip('[]').strip("'")
